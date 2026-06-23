@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Gift Savings 💝</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap');
+
+  :root {
+    --pink: #FF6B9D;
+    --pink-light: #FFB3CC;
+    --pink-bg: #FFF0F5;
+    --red: #FF4757;
+    --gold: #FFD166;
+    --gold-dark: #F4A800;
+    --dark: #2D1B33;
+    --mid: #6B4C7A;
+    --soft: #C9A8D6;
+    --white: #FFFFFF;
+    --card-bg: #FFFAFC;
+    --green: #06D6A0;
+    --border: #F2D4E0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--pink-bg);
+    color: var(--dark);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #FF6B9D 0%, #C850C0 60%, #4158D0 100%);
+    padding: 28px 20px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    top: -60px; right: -40px;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    bottom: 10px; left: -20px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+  .header p {
+    color: rgba(255,255,255,0.82);
+    font-size: 0.88rem;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .pig-emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+
+  /* MAIN BALANCE CARD */
+  .balance-card {
+    background: var(--white);
+    margin: -28px 16px 0;
+    border-radius: 20px;
+    padding: 24px 20px;
+    box-shadow: 0 8px 32px rgba(255,107,157,0.18);
+    position: relative;
+    z-index: 10;
+  }
+  .balance-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .balance-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.1;
+    margin: 6px 0 2px;
+  }
+  .balance-amount span {
+    font-size: 1.6rem;
+    color: var(--pink);
+  }
+  .balance-sub {
+    font-size: 0.82rem;
+    color: var(--soft);
+    font-weight: 600;
+  }
+  .balance-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .btn {
+    border: none;
+    border-radius: 14px;
+    padding: 14px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-add {
+    background: linear-gradient(135deg, var(--green), #00B894);
+    color: white;
+  }
+  .btn-remove {
+    background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+    color: white;
+  }
+  .btn-reset {
+    background: #F8F0FF;
+    color: var(--mid);
+    border: 2px solid var(--border);
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  /* SECTION TITLES */
+  .section {
+    margin: 20px 16px 0;
+  }
+  .section-title {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--mid);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+  }
+
+  /* ADD MONEY PANEL */
+  .add-panel {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 4px 16px rgba(255,107,157,0.10);
+  }
+  .quick-amounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .quick-btn {
+    background: var(--pink-bg);
+    border: 2px solid var(--pink-light);
+    color: var(--pink);
+    border-radius: 22px;
+    padding: 7px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-btn:active, .quick-btn.active {
+    background: var(--pink);
+    color: white;
+    border-color: var(--pink);
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .amount-input {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--dark);
+    outline: none;
+    background: var(--pink-bg);
+    transition: border 0.15s;
+  }
+  .amount-input:focus { border-color: var(--pink); }
+  .note-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    color: var(--dark);
+    outline: none;
+    background: var(--pink-bg);
+    margin-top: 8px;
+    resize: none;
+    height: 60px;
+    transition: border 0.15s;
+  }
+  .note-input:focus { border-color: var(--pink); }
+  .confirm-btn {
+    background: linear-gradient(135deg, var(--pink), #C850C0);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .confirm-btn:active { transform: scale(0.95); }
+
+  /* HISTORY */
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .history-item {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(255,107,157,0.08);
+  }
+  .history-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .history-icon.add { background: #E8FFF8; }
+  .history-icon.remove { background: #FFF0F0; }
+  .history-details { flex: 1; min-width: 0; }
+  .history-note {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-date {
+    font-size: 0.75rem;
+    color: var(--soft);
+    margin-top: 2px;
+  }
+  .history-amount {
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .history-amount.add { color: var(--green); }
+  .history-amount.remove { color: var(--red); }
+  .history-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.4;
+    padding: 4px;
+    transition: opacity 0.15s;
+  }
+  .history-del:hover { opacity: 0.8; }
+  .empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--soft);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .empty-state span { font-size: 2rem; display: block; margin-bottom: 8px; }
+
+  /* NOTES/WISHLIST */
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .note-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(255,107,157,0.08);
+  }
+  .note-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--pink-light);
+    background: white;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+  }
+  .note-check.done {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+  .note-text {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1.4;
+  }
+  .note-text.done { text-decoration: line-through; color: var(--soft); }
+  .note-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    opacity: 0.35;
+    padding: 2px 4px;
+    transition: opacity 0.15s;
+  }
+  .note-del:hover { opacity: 0.8; }
+  .note-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .note-text-input {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    color: var(--dark);
+    outline: none;
+    background: var(--pink-bg);
+    transition: border 0.15s;
+  }
+  .note-text-input:focus { border-color: var(--pink); }
+  .note-add-btn {
+    background: linear-gradient(135deg, var(--pink), #C850C0);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* GRAPH */
+  .graph-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 4px 16px rgba(255,107,157,0.10);
+  }
+  .graph-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .graph-tab {
+    flex: 1;
+    border: 2px solid var(--border);
+    background: var(--pink-bg);
+    color: var(--mid);
+    border-radius: 10px;
+    padding: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .graph-tab.active {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: white;
+  }
+  .chart-container {
+    height: 170px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding-bottom: 24px;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    gap: 4px;
+  }
+  .bar {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(to top, var(--pink), #C850C0);
+    transition: height 0.4s ease;
+    min-height: 2px;
+    position: relative;
+  }
+  .bar-val {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: var(--mid);
+    white-space: nowrap;
+  }
+  .bar-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--soft);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .no-data {
+    width: 100%;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--soft);
+    font-weight: 600;
+    padding: 40px 0;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 500;
+    align-items: flex-end;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 40px;
+    width: 100%;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: var(--dark);
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .modal-cancel {
+    flex: 1;
+    background: #F8F0FF;
+    color: var(--mid);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 13px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .modal-confirm {
+    flex: 1;
+    background: linear-gradient(135deg, var(--pink), #C850C0);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 13px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <span class="pig-emoji">💖</span>
+  <h1>Gift Savings</h1>
+  <p>Saving for someone special 💝</p>
+</div>
+
+<!-- BALANCE CARD -->
+<div class="balance-card">
+  <div class="balance-label">Total Saved</div>
+  <div class="balance-amount"><span>₹</span><span id="totalAmount">0</span></div>
+  <div class="balance-sub" id="totalEntries">0 entries</div>
+  <div class="balance-actions">
+    <button class="btn btn-add" onclick="openModal('add')">➕ Add Money</button>
+    <button class="btn btn-remove" onclick="openModal('remove')">➖ Remove</button>
+    <button class="btn btn-reset" onclick="confirmReset()">🔄 Reset All Data</button>
+  </div>
+</div>
+
+<!-- QUICK ADD -->
+<div class="section">
+  <div class="section-title">Quick Add</div>
+  <div class="add-panel">
+    <div class="quick-amounts">
+      <button class="quick-btn" onclick="setAmount(50)">₹50</button>
+      <button class="quick-btn" onclick="setAmount(100)">₹100</button>
+      <button class="quick-btn" onclick="setAmount(200)">₹200</button>
+      <button class="quick-btn" onclick="setAmount(500)">₹500</button>
+      <button class="quick-btn" onclick="setAmount(1000)">₹1000</button>
+    </div>
+    <div class="input-row">
+      <input class="amount-input" type="number" id="quickAmount" placeholder="₹ Amount" min="1">
+      <button class="confirm-btn" onclick="quickAdd()">Add 💰</button>
+    </div>
+    <textarea class="note-input" id="quickNote" placeholder="Note (optional): e.g. Daily saving..."></textarea>
+  </div>
+</div>
+
+<!-- GRAPH -->
+<div class="section">
+  <div class="section-title">Savings Graph</div>
+  <div class="graph-card">
+    <div class="graph-tabs">
+      <button class="graph-tab active" id="tab-weekly" onclick="switchTab('weekly')">Weekly</button>
+      <button class="graph-tab" id="tab-monthly" onclick="switchTab('monthly')">Monthly</button>
+    </div>
+    <div class="chart-container" id="chartContainer">
+      <div class="no-data">No data yet. Start saving! 🐷</div>
+    </div>
+  </div>
+</div>
+
+<!-- WISHLIST NOTES -->
+<div class="section">
+  <div class="section-title">🎁 Gift Wishlist</div>
+  <div class="add-panel">
+    <div class="notes-list" id="notesList"></div>
+    <div class="note-add-row">
+      <input class="note-text-input" type="text" id="noteInput" placeholder="What to buy? e.g. Red dress..." onkeydown="if(event.key==='Enter') addNote()">
+      <button class="note-add-btn" onclick="addNote()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="section">
+  <div class="section-title">Transaction History</div>
+  <div class="history-list" id="historyList">
+    <div class="empty-state"><span>💸</span>No transactions yet</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <h3 id="modalTitle">Add Money</h3>
+    <div class="input-row">
+      <input class="amount-input" type="number" id="modalAmount" placeholder="₹ Enter amount" min="1" style="flex:1">
+    </div>
+    <textarea class="note-input" id="modalNote" placeholder="Note (optional)..." style="margin-top:10px; width:100%"></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModalBtn()">Cancel</button>
+      <button class="modal-confirm" id="modalConfirmBtn" onclick="confirmModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// STATE
+let data = JSON.parse(localStorage.getItem('giftSavings') || '{"balance":0,"transactions":[],"notes":[]}');
+let currentTab = 'weekly';
+let modalMode = 'add';
+
+// SAVE
+function save() {
+  localStorage.setItem('giftSavings', JSON.stringify(data));
+}
+
+// TOAST
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// RENDER BALANCE
+function renderBalance() {
+  document.getElementById('totalAmount').textContent = data.balance.toLocaleString('en-IN');
+  const count = data.transactions.length;
+  document.getElementById('totalEntries').textContent = count + ' entr' + (count === 1 ? 'y' : 'ies');
+}
+
+// RENDER HISTORY
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (!data.transactions.length) {
+    el.innerHTML = '<div class="empty-state"><span>💸</span>No transactions yet</div>';
+    return;
+  }
+  el.innerHTML = [...data.transactions].reverse().map((t, ri) => {
+    const i = data.transactions.length - 1 - ri;
+    const icon = t.type === 'add' ? '💚' : '🔴';
+    const sign = t.type === 'add' ? '+' : '-';
+    const cls = t.type === 'add' ? 'add' : 'remove';
+    const d = new Date(t.date);
+    const dateStr = d.toLocaleDateString('en-IN', {day:'numeric', month:'short'}) + ' ' + d.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+    return `<div class="history-item">
+      <div class="history-icon ${cls}">${icon}</div>
+      <div class="history-details">
+        <div class="history-note">${t.note || (t.type === 'add' ? 'Money added' : 'Money removed')}</div>
+        <div class="history-date">${dateStr}</div>
+      </div>
+      <div class="history-amount ${cls}">${sign}₹${t.amount.toLocaleString('en-IN')}</div>
+      <button class="history-del" onclick="deleteTransaction(${i})">🗑️</button>
+    </div>`;
+  }).join('');
+}
+
+// RENDER NOTES
+function renderNotes() {
+  const el = document.getElementById('notesList');
+  if (!data.notes.length) {
+    el.innerHTML = '<div class="empty-state"><span>🎁</span>Write what you want to buy!</div>';
+    return;
+  }
+  el.innerHTML = data.notes.map((n, i) => `
+    <div class="note-card">
+      <div class="note-check ${n.done ? 'done' : ''}" onclick="toggleNote(${i})">${n.done ? '✓' : ''}</div>
+      <div class="note-text ${n.done ? 'done' : ''}">${n.text}</div>
+      <button class="note-del" onclick="deleteNote(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+// GRAPH
+function renderGraph() {
+  const container = document.getElementById('chartContainer');
+  const txns = data.transactions;
+  if (!txns.length) {
+    container.innerHTML = '<div class="no-data">No data yet. Start saving! 🐷</div>';
+    return;
+  }
+
+  let labels = [], values = [];
+
+  if (currentTab === 'weekly') {
+    // Last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const key = d.toDateString();
+      const label = d.toLocaleDateString('en-IN', {weekday:'short'});
+      const total = txns.filter(t => new Date(t.date).toDateString() === key)
+        .reduce((s, t) => s + (t.type === 'add' ? t.amount : -t.amount), 0);
+      labels.push(label);
+      values.push(Math.max(0, total));
+    }
+  } else {
+    // Last 6 months
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(); d.setMonth(d.getMonth() - i);
+      const m = d.getMonth(), y = d.getFullYear();
+      const label = d.toLocaleDateString('en-IN', {month:'short'});
+      const total = txns.filter(t => { const td = new Date(t.date); return td.getMonth() === m && td.getFullYear() === y; })
+        .reduce((s, t) => s + (t.type === 'add' ? t.amount : -t.amount), 0);
+      labels.push(label);
+      values.push(Math.max(0, total));
+    }
+  }
+
+  const maxVal = Math.max(...values, 1);
+  container.innerHTML = values.map((v, i) => {
+    const heightPct = (v / maxVal) * 130;
+    return `<div class="bar-col">
+      <div class="bar" style="height:${heightPct}px">
+        ${v > 0 ? `<div class="bar-val">₹${v >= 1000 ? (v/1000).toFixed(1)+'k' : v}</div>` : ''}
+      </div>
+      <div class="bar-label">${labels[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-weekly').classList.toggle('active', tab === 'weekly');
+  document.getElementById('tab-monthly').classList.toggle('active', tab === 'monthly');
+  renderGraph();
+}
+
+// ADD MONEY
+function addTransaction(amount, note, type) {
+  if (!amount || amount <= 0) { showToast('Enter a valid amount!'); return false; }
+  if (type === 'remove' && amount > data.balance) { showToast('Not enough savings!'); return false; }
+  data.transactions.push({ amount, note: note.trim(), type, date: new Date().toISOString() });
+  data.balance += type === 'add' ? amount : -amount;
+  save();
+  renderAll();
+  showToast(type === 'add' ? `+₹${amount} added! 🎉` : `-₹${amount} removed`);
+  return true;
+}
+
+function quickAdd() {
+  const amount = parseInt(document.getElementById('quickAmount').value);
+  const note = document.getElementById('quickNote').value;
+  if (addTransaction(amount, note, 'add')) {
+    document.getElementById('quickAmount').value = '';
+    document.getElementById('quickNote').value = '';
+    document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+  }
+}
+
+function setAmount(v) {
+  document.getElementById('quickAmount').value = v;
+  document.querySelectorAll('.quick-btn').forEach(b => b.classList.toggle('active', parseInt(b.textContent.replace('₹','')) === v));
+}
+
+function deleteTransaction(i) {
+  const t = data.transactions[i];
+  data.balance -= t.type === 'add' ? t.amount : -t.amount;
+  data.transactions.splice(i, 1);
+  save(); renderAll();
+  showToast('Transaction removed');
+}
+
+// NOTES
+function addNote() {
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if (!text) return;
+  data.notes.push({ text, done: false });
+  input.value = '';
+  save(); renderNotes();
+}
+
+function toggleNote(i) {
+  data.notes[i].done = !data.notes[i].done;
+  save(); renderNotes();
+}
+
+function deleteNote(i) {
+  data.notes.splice(i, 1);
+  save(); renderNotes();
+}
+
+// MODAL
+function openModal(mode) {
+  modalMode = mode;
+  document.getElementById('modalTitle').textContent = mode === 'add' ? '💰 Add Money' : '💸 Remove Money';
+  document.getElementById('modalAmount').value = '';
+  document.getElementById('modalNote').value = '';
+  document.getElementById('modalConfirmBtn').textContent = mode === 'add' ? 'Add Money' : 'Remove Money';
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('modalAmount').focus(), 300);
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+}
+function closeModalBtn() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function confirmModal() {
+  const amount = parseInt(document.getElementById('modalAmount').value);
+  const note = document.getElementById('modalNote').value;
+  if (addTransaction(amount, note, modalMode)) closeModalBtn();
+}
+
+// RESET
+function confirmReset() {
+  if (confirm('Reset ALL savings and notes? This cannot be undone!')) {
+    data = { balance: 0, transactions: [], notes: [] };
+    save(); renderAll();
+    showToast('All data reset 🔄');
+  }
+}
+
+// RENDER ALL
+function renderAll() {
+  renderBalance();
+  renderHistory();
+  renderNotes();
+  renderGraph();
+}
+
+// INIT
+renderAll();
+</script>
+</body>
+</html>
